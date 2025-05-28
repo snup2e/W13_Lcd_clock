@@ -1,5 +1,4 @@
-// digital_clock_lcd.v
-// HD44780 CGROM 기반 문자 코드 사용 예제
+// HD44780 CGROM 기반 문자 코드 사용
 // 100 MHz → 1 ms, 4 ms, 1 s tick
 // 날짜(YYYY/MM/DD)와 시간(hh:mm:ss)를 16×2 LCD에 출력
 
@@ -13,14 +12,16 @@ module digital_clock_lcd #(
     output            lcd_rw,
     output reg [7:0]  lcd_data
 );
-
-// tick1s를 정말 빠르게(예: 100clk마다) 발생시키면,
+    
 // 매 100clk마다 내부 시각(sec)이 1초씩 올라간다 → LCD엔 매 4ms마다 한 번씩만 업데이트
-// → 눈에는 초 단위가 엄청 빠르게 뛰어다니는 효과
+// FPGA 재생 100만배속 전용 tick
 reg [6:0] fast_sec_cnt;
 reg       fast_tick1s;
 always @(posedge clk or negedge resetn) begin
-  if (!resetn) fast_sec_cnt<=0;
+  if (!resetn)
+  begin 
+      fast_sec_cnt<=0;
+      fast_tick1s <= 0;
   else if (fast_sec_cnt==100-1) begin
     fast_sec_cnt<=0;
     fast_tick1s <=1;
