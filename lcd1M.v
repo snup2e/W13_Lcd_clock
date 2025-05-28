@@ -22,6 +22,7 @@ always @(posedge clk or negedge resetn) begin
   begin 
       fast_sec_cnt<=0;
       fast_tick1s <= 0;
+  end
   else if (fast_sec_cnt==100-1) begin
     fast_sec_cnt<=0;
     fast_tick1s <=1;
